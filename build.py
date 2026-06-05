@@ -28,15 +28,22 @@ TEMPLATE_DIR = "template"
 def get_tenant_token():
     url = f"{BASE_API}/auth/v3/tenant_access_token/internal"
     resp = requests.post(url, json={"app_id": APP_ID, "app_secret": APP_SECRET})
-    return resp.json()["tenant_access_token"]
+    data = resp.json()
+    if "tenant_access_token" not in data:
+        print(f"❌ 飞书认证失败: {data}")
+        raise SystemExit(1)
+    return data["tenant_access_token"]
 
 def list_tables(token):
     """获取多维表格中所有数据表的 名称→table_id 映射"""
     url = f"{BASE_API}/bitable/v1/apps/{BASE_TOKEN}/tables"
     headers = {"Authorization": f"Bearer {token}"}
     resp = requests.get(url, headers=headers)
-    items = resp.json()["data"]["items"]
-    return {item["name"]: item["table_id"] for item in items}
+    data = resp.json()
+    if data.get("code", -1) != 0:
+        print(f"❌ 获取数据表列表失败: {data}")
+        raise SystemExit(1)
+    return {item["name"]: item["table_id"] for item in data["data"]["items"]}
 
 def get_table_records(token, table_id):
     """分页获取数据表全部记录"""
@@ -48,9 +55,12 @@ def get_table_records(token, table_id):
             url += f"&page_token={page_token}"
         headers = {"Authorization": f"Bearer {token}"}
         resp = requests.get(url, headers=headers)
-        data = resp.json()["data"]
-        all_items.extend(data.get("items", []))
-        page_token = data.get("page_token")
+        data = resp.json()
+        if data.get("code", -1) != 0:
+            print(f"❌ 获取记录失败 (table_id={table_id}): {data}")
+            raise SystemExit(1)
+        all_items.extend(data.get("data", {}).get("items", []))
+        page_token = data.get("data", {}).get("page_token")
         if not page_token:
             break
     return all_items
