@@ -116,14 +116,42 @@ def s(val, default=""):
         return val.strip() or default
     return str(val) if val is not None else default
 
-def img_url(val, default=""):
-    """飞书附件字段取图片URL：附件列表取第一张的 url/tmp_url，字符串直接返回"""
+def _download_one(token, att, save_dir="assets"):
+    """下载单个飞书附件到本地，返回 Web 路径"""
+    file_token = att.get("file_token", "")
+    name = att.get("name", file_token)
+    if file_token:
+        local_dir = os.path.join(OUTPUT_DIR, save_dir)
+        os.makedirs(local_dir, exist_ok=True)
+        ext = os.path.splitext(name)[1] or ".bin"
+        local_name = f"{file_token}{ext}"
+        save_path = os.path.join(local_dir, local_name)
+        if not os.path.exists(save_path):
+            try:
+                dl_url = f"{BASE_API}/drive/v1/medias/{file_token}"
+                resp = requests.get(dl_url, headers={"Authorization": f"Bearer {token}"}, stream=True, timeout=60)
+                with open(save_path, "wb") as f:
+                    for chunk in resp.iter_content(chunk_size=8192):
+                        f.write(chunk)
+            except Exception as e:
+                print(f"  ⚠️ 下载失败 ({name}): {e}")
+                return att.get("url", "") or att.get("tmp_url", "")
+        return f"/{save_dir}/{local_name}"
+    return att.get("url", "") or att.get("tmp_url", "")
+
+def download_media(token, val, save_dir="assets"):
+    """飞书附件下载到本地，字符串URL原样返回"""
     if isinstance(val, list) and val:
-        att = val[0]
-        return att.get("url", "") or att.get("tmp_url", "") or default
+        return _download_one(token, val[0], save_dir)
     if isinstance(val, str) and val.strip():
         return val.strip()
-    return default
+    return ""
+
+def download_media_list(token, val, save_dir="assets"):
+    """飞书多附件下载，返回 URL 列表"""
+    if not isinstance(val, list):
+        return [val.strip()] if isinstance(val, str) and val.strip() else []
+    return [_download_one(token, att, save_dir) for att in val]
 
 def gen_product_card(p, cat_map):
     """生成单个商品卡片HTML（用于首页/分类页横滚 & 网格）"""
@@ -155,7 +183,7 @@ def gen_related_card(p, cat_map):
 </div>
 """
 
-def gen_slider_html(carousel_data):
+def gen_slider_html(carousel_data, token):
     """生成轮播图HTML（.slider 结构，与 script.js 配合）"""
     if not carousel_data:
         return ""
@@ -163,7 +191,7 @@ def gen_slider_html(carousel_data):
     dots_html = ""
     for idx, item in enumerate(carousel_data):
         fd = item["fields"]
-        img = img_url(fd.get("轮播图片"))
+        img = download_media(token, fd.get("轮播图片"))
         link = s(fd.get("图片链接"), "#")
         active = "active" if idx == 0 else ""
         slides_html += f'<div class="slide {active}"><a href="{link}" target="_blank"><img src="{img}" alt="Banner {idx+1}"></a></div>\n'
@@ -197,7 +225,7 @@ def main():
     # 基础站点信息（来自「网站设置」表）
     cfg = site_config[0]["fields"] if site_config else {}
     site_name = s(cfg.get("网站名称"), "Site")
-    site_logo = img_url(cfg.get("网站logo"))
+    site_logo = download_media(token, cfg.get("网站logo"))
     site_keywords = s(cfg.get("网站keywords"))
     site_desc = s(cfg.get("网站description"))
     global SITE_DOMAIN
@@ -209,7 +237,7 @@ def main():
     foot_code = s(cfg.get("自定义foot代码"))
 
     # Favicon（来自「网站设置」表的附件字段，直接取URL）
-    favicon_url = img_url(cfg.get("Favicon"))
+    favicon_url = download_media(token, cfg.get("Favicon"))
 
     # 生成 favicon <link> 标签（根据扩展名自动匹配 type）
     favicon_tag = ""
@@ -228,7 +256,7 @@ def main():
         social_links_html += f'<a href="{url}" target="_blank"><i class="{icon}"></i></a>\n'
 
     # 轮播图HTML（使用 .slider 结构）
-    carousel_html = gen_slider_html(carousel_data)
+    carousel_html = gen_slider_html(carousel_data, token)
 
     # 分类导航（头部 + 页脚）
     cat_nav_html = ""
@@ -265,14 +293,14 @@ def main():
             "cat": s(fd.get("产品分类")),
             "slug": s(fd.get("产品slug")),
             "title": s(fd.get("产品title")),
-            "img": img_url(fd.get("商品图片")),
+            "img": download_media(token, fd.get("商品图片")),
             "price": s(fd.get("单价", "0")),
             "asin": s(fd.get("asin")),
             "content": s(fd.get("产品简介")),
             "link": s(fd.get("跳转链接", "#")),
             "is_new": s(fd.get("新品", "否")) == "是",
             "is_bestseller": s(fd.get("畅销品", "否")) == "是",
-            "images": fd.get("商品图片列表", "")
+            "images": download_media_list(token, fd.get("商品图片列表"))
         })
 
     # 筛选新品Top30、畅销品Top30
@@ -368,10 +396,7 @@ def main():
             # 商品多图处理
             images = [p["img"]]
             if p.get("images"):
-                if isinstance(p["images"], list):
-                    images = p["images"]
-                elif isinstance(p["images"], str) and p["images"].strip():
-                    images = [img.strip() for img in p["images"].split(",") if img.strip()]
+                images = p["images"] if isinstance(p["images"], list) else [p["images"]] if isinstance(p["images"], str) and p["images"].strip() else []
 
             images_html = ""
             dots_html = ""
