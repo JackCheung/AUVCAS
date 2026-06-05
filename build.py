@@ -28,7 +28,7 @@ TABLE_NAMES = {
 
 # 站点域名（从飞书「网站设置」表读取）
 SITE_DOMAIN = ""
-OUTPUT_DIR = "."
+OUTPUT_DIR = "public"
 TEMPLATE_DIR = "template"
 
 # ===================== 飞书接口函数 =====================
@@ -461,7 +461,15 @@ def main():
             f.write(page_html)
         all_sitemap_urls.append(f"{SITE_DOMAIN}/{slug}/")
 
-    # ===================== 4. 生成 robots.txt & sitemap.xml =====================
+    # ===================== 4. 复制静态资源 & CNAME =====================
+    import shutil
+    shutil.copy(os.path.join(TEMPLATE_DIR, "style.css"), os.path.join(OUTPUT_DIR, "style.css"))
+    shutil.copy(os.path.join(TEMPLATE_DIR, "script.js"), os.path.join(OUTPUT_DIR, "script.js"))
+    if os.path.exists("CNAME"):
+        shutil.copy("CNAME", os.path.join(OUTPUT_DIR, "CNAME"))
+    print("✅ style.css、script.js、CNAME 已复制到 public/")
+
+    # ===================== 5. 生成 robots.txt & sitemap.xml =====================
     gen_robots()
     gen_sitemap(all_sitemap_urls)
     print("✅ 全部页面生成完成！")
