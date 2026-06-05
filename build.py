@@ -120,25 +120,28 @@ def _download_one(token, att, save_dir="assets"):
     """下载单个飞书附件到本地，返回 Web 路径"""
     file_token = att.get("file_token", "")
     name = att.get("name", file_token)
-    if file_token:
+    # 优先用附件自带的 url / tmp_url，加认证头下载
+    download_url = att.get("url", "") or att.get("tmp_url", "")
+    if not download_url and file_token:
+        download_url = f"{BASE_API}/drive/v1/medias/{file_token}"
+    if download_url:
         local_dir = os.path.join(OUTPUT_DIR, save_dir)
         os.makedirs(local_dir, exist_ok=True)
         ext = os.path.splitext(name)[1] or ".bin"
-        local_name = f"{file_token}{ext}"
+        local_name = f"{file_token}{ext}" if file_token else f"{name}"
         save_path = os.path.join(local_dir, local_name)
         if not os.path.exists(save_path):
             try:
-                dl_url = f"{BASE_API}/drive/v1/medias/{file_token}"
-                resp = requests.get(dl_url, headers={"Authorization": f"Bearer {token}"}, stream=True, timeout=60)
+                resp = requests.get(download_url, headers={"Authorization": f"Bearer {token}"}, stream=True, timeout=60)
                 if resp.status_code != 200:
                     err = resp.text[:200]
                     print(f"  ⚠️ 下载失败 ({name}): HTTP {resp.status_code} - {err}")
-                    return att.get("url", "") or att.get("tmp_url", "")
+                    return download_url
                 ct = resp.headers.get("Content-Type", "")
                 if "json" in ct or "text/html" in ct:
                     err = resp.text[:200]
                     print(f"  ⚠️ 下载失败 ({name}): 响应类型异常 {ct} - {err}")
-                    return att.get("url", "") or att.get("tmp_url", "")
+                    return download_url
                 with open(save_path, "wb") as f:
                     for chunk in resp.iter_content(chunk_size=8192):
                         f.write(chunk)
@@ -146,9 +149,9 @@ def _download_one(token, att, save_dir="assets"):
                 print(f"  ✅ 下载成功: {name} ({size_kb:.1f}KB)")
             except Exception as e:
                 print(f"  ⚠️ 下载失败 ({name}): {e}")
-                return att.get("url", "") or att.get("tmp_url", "")
+                return download_url
         return f"/{save_dir}/{local_name}"
-    return att.get("url", "") or att.get("tmp_url", "")
+    return download_url or ""
 
 def download_media(token, val, save_dir="assets"):
     """飞书附件下载到本地，字符串URL原样返回"""
