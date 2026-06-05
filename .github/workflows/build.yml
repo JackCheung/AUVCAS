@@ -2,18 +2,18 @@ name: Build & Deploy Site
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - "index.html"
+      - "sitemap.xml"
+      - "robots.txt"
+      - "CNAME"
+      - "**/index.html"
   workflow_dispatch:
   schedule:
     - cron: "0 * * * *"
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write
 
 jobs:
   build:
@@ -36,18 +36,11 @@ jobs:
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
           FEISHU_BASE_TOKEN: ${{ secrets.FEISHU_BASE_TOKEN }}
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v4
+      - name: Commit & Push generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html sitemap.xml robots.txt CNAME
+          git add */index.html
+          git diff --cached --quiet || git commit -m "🤖 auto build from Feishu data"
+          git push

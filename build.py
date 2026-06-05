@@ -28,7 +28,7 @@ TABLE_NAMES = {
 
 # 站点域名（从飞书「网站设置」表读取）
 SITE_DOMAIN = ""
-OUTPUT_DIR = "public"
+OUTPUT_DIR = "."
 TEMPLATE_DIR = "template"
 
 # ===================== 飞书接口函数 =====================
@@ -430,7 +430,7 @@ def main():
     # ===================== 4. 生成 robots.txt & sitemap.xml =====================
     gen_robots()
     gen_sitemap(all_sitemap_urls)
-    print("✅ 全部页面、robots.txt、sitemap.xml 生成完成！")
+    print("✅ 全部页面生成完成！")
 
 if __name__ == "__main__":
     main()
