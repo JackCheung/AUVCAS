@@ -4,10 +4,17 @@ import requests
 from urllib.parse import quote
 
 # ===================== 飞书配置 =====================
-APP_ID = os.getenv("FEISHU_APP_ID")
-APP_SECRET = os.getenv("FEISHU_APP_SECRET")
-BASE_TOKEN = os.getenv("FEISHU_BASE_TOKEN")
+APP_ID = os.getenv("FEISHU_APP_ID", "").strip()
+APP_SECRET = os.getenv("FEISHU_APP_SECRET", "").strip()
+BASE_TOKEN = os.getenv("FEISHU_BASE_TOKEN", "").strip()
 BASE_API = "https://open.feishu.cn/open-apis"
+
+# 启动前校验必填环境变量
+_required = {"FEISHU_APP_ID": APP_ID, "FEISHU_APP_SECRET": APP_SECRET, "FEISHU_BASE_TOKEN": BASE_TOKEN}
+_missing = [k for k, v in _required.items() if not v]
+if _missing:
+    print(f"❌ 缺少必填环境变量: {', '.join(_missing)}")
+    raise SystemExit(1)
 
 # 多维表格中各数据表的名称（按飞书表格实际名称填写）
 TABLE_NAMES = {
