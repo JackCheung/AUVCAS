@@ -376,11 +376,11 @@ def main():
             images_html = ""
             dots_html = ""
             thumbnails_html = ""
-            for idx, img_url in enumerate(images):
+            for idx, img_src in enumerate(images):
                 active = "active" if idx == 0 else ""
-                images_html += f'<img src="{img_url}" alt="Product {idx+1}" class="carousel-img {active}">\n'
+                images_html += f'<img src="{img_src}" alt="Product {idx+1}" class="carousel-img {active}">\n'
                 dots_html += f'<span class="dot {active}" onclick="goToSlide({idx})"></span>\n'
-                thumbnails_html += f'<div class="thumbnail {active}" onclick="changeImage({idx+1})"><img src="{img_url}" alt="Thumbnail {idx+1}"></div>\n'
+                thumbnails_html += f'<div class="thumbnail {active}" onclick="changeImage({idx+1})"><img src="{img_src}" alt="Thumbnail {idx+1}"></div>\n'
 
             # 相关商品（同分类下其他商品 + 其他分类商品补充，最多15个）
             related = [rp for rp in cat_prods if rp["slug"] != prod_slug][:15]
