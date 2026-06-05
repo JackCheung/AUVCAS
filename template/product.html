@@ -1,0 +1,96 @@
+{{header}}
+<main>
+  <!-- 面包屑导航 -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/{{category_slug}}/">{{category_name}}</a>
+      <span>/</span>
+      <span class="current">{{product_title}}</span>
+    </div>
+  </div>
+  <!-- 商品详情 -->
+  <div class="container product-container">
+    <div class="product-images">
+      <div class="main-image">
+        <div class="image-carousel" id="imageCarousel">
+          {{product_images_html}}
+        </div>
+        <div class="carousel-dots" id="carouselDots">
+          {{product_dots_html}}
+        </div>
+      </div>
+      <div class="thumbnail-images">
+        {{product_thumbnails_html}}
+      </div>
+    </div>
+    <div class="product-info">
+      <h1 class="product-title">{{product_title}}</h1>
+      <p class="product-price">${{product_price}}</p>
+      <p class="product-description">{{product_content}}</p>
+      <div class="product-actions">
+        <a href="{{product_amazon_link}}" target="_blank" class="buy-now-btn">Buy on Amazon</a>
+        <button class="share-btn" onclick="openShareModal()">
+          <i class="fas fa-share-alt"></i> Share
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 分享弹窗 -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-modal-overlay" onclick="closeShareModal()"></div>
+    <div class="share-modal-content">
+      <div class="share-header">
+        <span class="share-title">Share this product with friends</span>
+        <button class="share-close" onclick="closeShareModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="share-product">
+        <img src="{{product_img}}" alt="Product" class="share-product-img">
+        <div class="share-product-info">
+          <p class="share-product-name">{{product_title}}</p>
+          <p class="share-product-price">${{product_price}}</p>
+        </div>
+      </div>
+      <!-- 手机端分享按钮 -->
+      <div class="share-buttons share-buttons-mobile">
+        <button class="share-option" onclick="shareTo('messages')"><i class="fab fa-apple"></i><span>Messages</span></button>
+        <button class="share-option" onclick="shareTo('whatsapp')"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></button>
+        <button class="share-option" onclick="shareTo('copy')"><i class="fas fa-copy"></i><span>Copy</span></button>
+        <button class="share-option" onclick="shareTo('messenger')"><i class="fab fa-facebook-messenger"></i><span>Messenger</span></button>
+        <button class="share-option" onclick="shareTo('email')"><i class="fas fa-envelope"></i><span>Email</span></button>
+      </div>
+      <!-- 电脑端分享按钮 -->
+      <div class="share-buttons share-buttons-desktop">
+        <button class="share-option" onclick="shareTo('email')"><i class="fas fa-envelope"></i><span>Email</span></button>
+        <button class="share-option" onclick="shareTo('pinterest')"><i class="fab fa-pinterest"></i><span>Pinterest</span></button>
+        <button class="share-option" onclick="shareTo('facebook')"><i class="fab fa-facebook-f"></i><span>Facebook</span></button>
+        <button class="share-option" onclick="shareTo('x')"><i class="fab fa-x"></i><span>X</span></button>
+        <button class="share-option" onclick="shareTo('copy')"><i class="fas fa-copy"></i><span>Copy link</span></button>
+        <button class="share-option" onclick="shareTo('qr')"><i class="fas fa-qrcode"></i><span>Scan QR code</span></button>
+      </div>
+      <div class="share-toast" id="shareToast">
+        <i class="fas fa-check-circle"></i>
+        <span>Link copied to clipboard!</span>
+      </div>
+    </div>
+  </div>
+  <!-- 相关商品 -->
+  <div class="container related-products">
+    <h2 class="related-title">Frequently Bought Together</h2>
+    <div class="product-carousel-container">
+      <button class="carousel-btn prev" onclick="scrollRelatedProducts(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="related-grid" id="relatedGrid">
+        {{related_products}}
+      </div>
+      <button class="carousel-btn next" onclick="scrollRelatedProducts(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</main>
+{{footer}}

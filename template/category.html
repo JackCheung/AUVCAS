@@ -1,0 +1,23 @@
+{{header}}
+<main>
+  <!-- 面包屑导航 -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Home</a>
+      <span>/</span>
+      <span class="current">{{category_name}}</span>
+    </div>
+  </div>
+  <!-- 分类描述 -->
+  <div class="container">
+    <p class="category-desc">{{category_desc}}</p>
+  </div>
+  <!-- 商品列表 -->
+  <div class="container">
+    <div class="results-count">{{category_product_count}} results</div>
+    <div class="product-grid">
+      {{category_product_list}}
+    </div>
+  </div>
+</main>
+{{footer}}

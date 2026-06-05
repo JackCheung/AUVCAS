@@ -1,0 +1,49 @@
+{{header}}
+<main>
+  <!-- 主体1. 轮播图 -->
+  {{carousel_html}}
+  <!-- 主体2. 畅销商品 -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Best Sellers</h2>
+      <div class="product-carousel-container">
+        <button class="carousel-btn prev" onclick="scrollProducts(-1, 'productCarousel1')">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="product-carousel" id="productCarousel1">
+          {{bestseller_list}}
+        </div>
+        <button class="carousel-btn next" onclick="scrollProducts(1, 'productCarousel1')">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 主体3. 最新商品 -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">New Arrivals</h2>
+      <div class="product-carousel-container">
+        <button class="carousel-btn prev" onclick="scrollProducts(-1, 'productCarousel2')">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="product-carousel" id="productCarousel2">
+          {{new_product_list}}
+        </div>
+        <button class="carousel-btn next" onclick="scrollProducts(1, 'productCarousel2')">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- 主体4. 全部商品 -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">All Products</h2>
+      <div class="product-grid">
+        {{product_list}}
+      </div>
+    </div>
+  </section>
+</main>
+{{footer}}
