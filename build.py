@@ -276,16 +276,22 @@ def main():
     cat_nav_html = ""
     cat_nav_footer_html = ""
     cat_list_html = ""
-    cat_map = {}
+    cat_map = {}        # {title: {slug, desc}}
+    cat_id_map = {}     # {record_id: {slug, desc, title}}
     for cat in cat_list:
         fd = cat["fields"]
+        rid = cat.get("record_id", "")
         slug = s(fd.get("分类slug"))
         title = s(fd.get("分类title"))
         desc = s(fd.get("分类description"))
-        cat_map[title] = {"slug": slug, "desc": desc}
+        cat_map[title] = {"slug": slug, "desc": desc, "title": title}
+        if rid:
+            cat_id_map[rid] = {"slug": slug, "desc": desc, "title": title}
         cat_nav_html += f'<li><a href="/{slug}/">{title}</a></li>'
         cat_nav_footer_html += f'<li><a href="/{slug}/">{title}</a></li>'
         cat_list_html += f'<a href="/{slug}/">{title}</a>'
+    print(f"  分类映射: {list(cat_map.keys())}")
+    print(f"  分类ID映射: {list(cat_id_map.keys())}")
 
     # 自定义页面导航（头部 + 页脚）
     page_nav_html = ""
@@ -301,10 +307,31 @@ def main():
 
     # 商品数据整理
     prod_map = []
+    no_match_cats = set()
     for prod in prod_list:
         fd = prod["fields"]
+        raw_cat = fd.get("产品分类", "")
+        # 关联字段匹配：先尝试 record_id，再尝试 title 文本
+        cat_info = None
+        if isinstance(raw_cat, list) and raw_cat:
+            first = raw_cat[0]
+            # 如果关联字段返回的是 record_id（如 "recXXXXXX"）
+            if isinstance(first, str) and first in cat_id_map:
+                cat_info = cat_id_map[first]
+            # 如果返回的是 record_id 列表（二维数组的情况）
+            elif isinstance(first, list) and len(first) > 0:
+                rid = str(first[0])
+                if rid in cat_id_map:
+                    cat_info = cat_id_map[rid]
+        # title 文本匹配
+        cat_text = s(raw_cat)
+        if not cat_info and cat_text in cat_map:
+            cat_info = cat_map[cat_text]
+        if not cat_info:
+            no_match_cats.add(repr(raw_cat))
+            cat_info = {"slug": "", "desc": "", "title": ""}
         prod_map.append({
-            "cat": s(fd.get("产品分类")),
+            "cat": cat_info["title"],
             "slug": s(fd.get("产品slug")),
             "title": s(fd.get("产品title")),
             "img": download_media(token, fd.get("商品图片")),
@@ -316,6 +343,10 @@ def main():
             "is_bestseller": s(fd.get("畅销品", "否")) == "是",
             "images": download_media_list(token, fd.get("商品图片列表"))
         })
+
+    if no_match_cats:
+        print(f"  ⚠️ 以下产品分类未匹配到分类表: {no_match_cats}")
+        print(f"     分类表可用key: {list(cat_map.keys())} / {list(cat_id_map.keys())}")
 
     # 筛选新品Top30、畅销品Top30
     new_products = [p for p in prod_map if p["is_new"]][:30]
