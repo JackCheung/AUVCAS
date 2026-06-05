@@ -108,6 +108,23 @@ def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
+def s(val, default=""):
+    """飞书字段值兼容：列表取首元素，空值给默认值，始终返回字符串"""
+    if isinstance(val, list):
+        return str(val[0]) if val else default
+    if isinstance(val, str):
+        return val.strip() or default
+    return str(val) if val is not None else default
+
+def img_url(val, default=""):
+    """飞书附件字段取图片URL：附件列表取第一张的 url/tmp_url，字符串直接返回"""
+    if isinstance(val, list) and val:
+        att = val[0]
+        return att.get("url", "") or att.get("tmp_url", "") or default
+    if isinstance(val, str) and val.strip():
+        return val.strip()
+    return default
+
 def gen_product_card(p, cat_map):
     """生成单个商品卡片HTML（用于首页/分类页横滚 & 网格）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
@@ -146,8 +163,8 @@ def gen_slider_html(carousel_data):
     dots_html = ""
     for idx, item in enumerate(carousel_data):
         fd = item["fields"]
-        img = fd.get("轮播图片", "")
-        link = fd.get("图片链接", "#")
+        img = img_url(fd.get("轮播图片"))
+        link = s(fd.get("图片链接"), "#")
         active = "active" if idx == 0 else ""
         slides_html += f'<div class="slide {active}"><a href="{link}" target="_blank"><img src="{img}" alt="Banner {idx+1}"></a></div>\n'
         dots_html += f'<div class="slider-dot {active}" onclick="goToSlide({idx})"></div>\n'
@@ -179,28 +196,20 @@ def main():
 
     # 基础站点信息（来自「网站设置」表）
     cfg = site_config[0]["fields"] if site_config else {}
-    site_name = cfg.get("网站名称", "Site")
-    site_logo = cfg.get("网站logo", "")
-    site_keywords = cfg.get("网站keywords", "")
-    site_desc = cfg.get("网站description", "")
+    site_name = s(cfg.get("网站名称"), "Site")
+    site_logo = img_url(cfg.get("网站logo"))
+    site_keywords = s(cfg.get("网站keywords"))
+    site_desc = s(cfg.get("网站description"))
     global SITE_DOMAIN
-    SITE_DOMAIN = cfg.get("网站url", "")
+    SITE_DOMAIN = s(cfg.get("网站url"))
 
     # 顶部通知 & 自定义代码（也来自「网站设置」表）
-    notice_html = cfg.get("通知内容", "")
-    head_code = cfg.get("自定义head代码", "")
-    foot_code = cfg.get("自定义foot代码", "")
+    notice_html = s(cfg.get("通知内容"))
+    head_code = s(cfg.get("自定义head代码"))
+    foot_code = s(cfg.get("自定义foot代码"))
 
     # Favicon（来自「网站设置」表的附件字段，直接取URL）
-    favicon_url = ""
-    favicon_field = cfg.get("Favicon")
-    if favicon_field:
-        if isinstance(favicon_field, list) and len(favicon_field) > 0:
-            # 附件类型：取 url 或 tmp_url
-            att = favicon_field[0]
-            favicon_url = att.get("url", "") or att.get("tmp_url", "")
-        elif isinstance(favicon_field, str) and favicon_field.strip():
-            favicon_url = favicon_field.strip()
+    favicon_url = img_url(cfg.get("Favicon"))
 
     # 生成 favicon <link> 标签（根据扩展名自动匹配 type）
     favicon_tag = ""
@@ -214,8 +223,8 @@ def main():
     social_links_html = ""
     for item in social_data:
         fd = item["fields"]
-        url = fd.get("链接", "#")
-        icon = fd.get("图标", "fas fa-link")
+        url = s(fd.get("链接"), "#")
+        icon = s(fd.get("图标"), "fas fa-link")
         social_links_html += f'<a href="{url}" target="_blank"><i class="{icon}"></i></a>\n'
 
     # 轮播图HTML（使用 .slider 结构）
@@ -228,9 +237,9 @@ def main():
     cat_map = {}
     for cat in cat_list:
         fd = cat["fields"]
-        slug = fd.get("分类slug", "")
-        title = fd.get("分类title", "")
-        desc = fd.get("分类description", "")
+        slug = s(fd.get("分类slug"))
+        title = s(fd.get("分类title"))
+        desc = s(fd.get("分类description"))
         cat_map[title] = {"slug": slug, "desc": desc}
         cat_nav_html += f'<li><a href="/{slug}/">{title}</a></li>'
         cat_nav_footer_html += f'<li><a href="/{slug}/">{title}</a></li>'
@@ -242,9 +251,9 @@ def main():
     page_map = {}
     for page in page_list:
         fd = page["fields"]
-        slug = fd.get("页面slug", "")
-        title = fd.get("页面title", "")
-        page_map[slug] = {"title": title, "content": fd.get("正文", ""), "kw": fd.get("分类keywords", ""), "desc": fd.get("分类description", "")}
+        slug = s(fd.get("页面slug"))
+        title = s(fd.get("页面title"))
+        page_map[slug] = {"title": title, "content": s(fd.get("正文")), "kw": s(fd.get("分类keywords")), "desc": s(fd.get("分类description"))}
         page_nav_html += f'<li><a href="/{slug}/">{title}</a></li>'
         page_nav_footer_html += f'<li><a href="/{slug}/">{title}</a></li>'
 
@@ -253,16 +262,16 @@ def main():
     for prod in prod_list:
         fd = prod["fields"]
         prod_map.append({
-            "cat": fd.get("产品分类", ""),
-            "slug": fd.get("产品slug", ""),
-            "title": fd.get("产品title", ""),
-            "img": fd.get("商品图片", ""),
-            "price": fd.get("单价", "0"),
-            "asin": fd.get("asin", ""),
-            "content": fd.get("产品简介", ""),
-            "link": fd.get("跳转链接", "#"),
-            "is_new": fd.get("新品", "否") == "是",
-            "is_bestseller": fd.get("畅销品", "否") == "是",
+            "cat": s(fd.get("产品分类")),
+            "slug": s(fd.get("产品slug")),
+            "title": s(fd.get("产品title")),
+            "img": img_url(fd.get("商品图片")),
+            "price": s(fd.get("单价", "0")),
+            "asin": s(fd.get("asin")),
+            "content": s(fd.get("产品简介")),
+            "link": s(fd.get("跳转链接", "#")),
+            "is_new": s(fd.get("新品", "否")) == "是",
+            "is_bestseller": s(fd.get("畅销品", "否")) == "是",
             "images": fd.get("商品图片列表", "")
         })
 
