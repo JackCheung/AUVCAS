@@ -131,11 +131,13 @@ def _download_one(token, att, save_dir="assets"):
                 dl_url = f"{BASE_API}/drive/v1/medias/{file_token}"
                 resp = requests.get(dl_url, headers={"Authorization": f"Bearer {token}"}, stream=True, timeout=60)
                 if resp.status_code != 200:
-                    print(f"  ⚠️ 下载失败 ({name}): HTTP {resp.status_code}")
+                    err = resp.text[:200]
+                    print(f"  ⚠️ 下载失败 ({name}): HTTP {resp.status_code} - {err}")
                     return att.get("url", "") or att.get("tmp_url", "")
                 ct = resp.headers.get("Content-Type", "")
                 if "json" in ct or "text/html" in ct:
-                    print(f"  ⚠️ 下载失败 ({name}): 响应类型异常 {ct}")
+                    err = resp.text[:200]
+                    print(f"  ⚠️ 下载失败 ({name}): 响应类型异常 {ct} - {err}")
                     return att.get("url", "") or att.get("tmp_url", "")
                 with open(save_path, "wb") as f:
                     for chunk in resp.iter_content(chunk_size=8192):
