@@ -326,20 +326,29 @@ def main():
         fd = prod["fields"]
         raw_cat = fd.get("产品分类", "")
         prod_title = s(fd.get("产品title"))
-        print(f"  商品 {prod_title}: 产品分类={repr(raw_cat)}")
-        # 关联字段匹配：先尝试 record_id，再尝试 title 文本
+        # print(f"  商品 {prod_title}: 产品分类={repr(raw_cat)}")
+        # 关联字段匹配：先尝试 record_id，再尝试 text 文本
         cat_info = None
         if isinstance(raw_cat, list) and raw_cat:
             first = raw_cat[0]
-            # 如果关联字段返回的是 record_id（如 "recXXXXXX"）
-            if isinstance(first, str) and first in cat_id_map:
+            if isinstance(first, dict):
+                # 飞书关联字段格式：{'record_ids': [...], 'text': '...'}
+                rec_ids = first.get("record_ids", [])
+                if rec_ids and rec_ids[0] in cat_id_map:
+                    cat_info = cat_id_map[rec_ids[0]]
+                if not cat_info:
+                    text = first.get("text", "") or first.get("text_arr", [""])[0] if first.get("text_arr") else ""
+                    if text and text in cat_map:
+                        cat_info = cat_map[text]
+            elif isinstance(first, str) and first in cat_id_map:
+                # record_id 字符串
                 cat_info = cat_id_map[first]
-            # 如果返回的是 record_id 列表（二维数组的情况）
             elif isinstance(first, list) and len(first) > 0:
+                # 嵌套列表
                 rid = str(first[0])
                 if rid in cat_id_map:
                     cat_info = cat_id_map[rid]
-        # title 文本匹配
+        # title 文本 fallback 匹配
         cat_text = s(raw_cat)
         if not cat_info and cat_text in cat_map:
             cat_info = cat_map[cat_text]
