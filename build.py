@@ -359,6 +359,7 @@ def main():
             "cat": cat_info["title"],
             "slug": s(fd.get("产品slug")),
             "title": s(fd.get("产品title")),
+            "img_raw": fd.get("商品图片"),
             "img": download_media(token, fd.get("商品图片")),
             "price": s(fd.get("单价", "0")),
             "asin": s(fd.get("asin")),
@@ -368,6 +369,10 @@ def main():
             "is_bestseller": s(fd.get("畅销品", "否")) == "是",
             "images": download_media_list(token, fd.get("商品图片列表"))
         })
+    # 调试：打印第一个商品的图片原始数据
+    if prod_list:
+        first_img_raw = prod_list[0]["fields"].get("商品图片")
+        print(f"  商品图片原始格式: {repr(first_img_raw)}")
 
     if no_match_cats:
         print(f"  ⚠️ 以下产品分类未匹配到分类表: {no_match_cats}")
