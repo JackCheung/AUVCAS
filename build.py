@@ -238,7 +238,8 @@ def main():
 
     # 基础站点信息（来自「网站设置」表）
     cfg = site_config[0]["fields"] if site_config else {}
-    site_name = s(cfg.get("网站名称"), "Site")
+    site_name = s(cfg.get("品牌名称"), "Site")
+    site_title = s(cfg.get("网站title"), site_name)
     site_logo = download_media(token, cfg.get("网站logo"))
     site_keywords = s(cfg.get("网站keywords"))
     site_desc = s(cfg.get("网站description"))
@@ -377,6 +378,7 @@ def main():
     header_data = {
         "page_title": "Home",
         "site_name": site_name,
+        "site_title": site_title,
         "page_keywords": site_keywords,
         "page_desc": site_desc,
         "site_logo": site_logo,
