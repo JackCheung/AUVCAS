@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--body-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
@@ -12,9 +12,11 @@ body {
 }
 
 :root {
-  --primary: #133CD1;
+  --primary: #111123;
   --accent: var(--primary);
-  --secondary: #00d2d3;
+  --secondary: #222233;
+  --heading-font: 'Inter';
+  --body-font: 'Inter';
   --white: #ffffff;
   --light: #F0F7FF;
   --gray: #636e72;
