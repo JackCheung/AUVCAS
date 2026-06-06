@@ -171,6 +171,7 @@ def gen_product_card(p, cat_map):
     """生成单个商品卡片HTML（用于首页/分类页横滚 & 网格）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
     img_src = p['img'][0] if p['img'] else ""
+    amazon_url = f"https://www.amazon.com/dp/{p['asin']}/" if p['asin'] else p['link']
     return f"""<div class="product-card">
     <a href="/{cat_slug}/{p['slug']}/">
         <img src="{img_src}" alt="{p['title']}">
@@ -178,7 +179,7 @@ def gen_product_card(p, cat_map):
     <div class="product-info">
         <h3 class="product-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
         <p class="product-price">${p['price']}</p>
-        <a href="{p['link']}" target="_blank" class="buy-btn">Buy on Amazon</a>
+        <a href="{amazon_url}" target="_blank" class="buy-btn">Buy on Amazon</a>
     </div>
 </div>
 """
@@ -187,6 +188,7 @@ def gen_related_card(p, cat_map):
     """生成相关商品卡片HTML（用于商品详情页底部）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
     img_src = p['img'][0] if p['img'] else ""
+    amazon_url = f"https://www.amazon.com/dp/{p['asin']}/" if p['asin'] else p['link']
     return f"""<div class="related-card">
     <a href="/{cat_slug}/{p['slug']}/">
         <img src="{img_src}" alt="{p['title']}" class="related-img">
@@ -194,7 +196,7 @@ def gen_related_card(p, cat_map):
     <div class="related-info">
         <h3 class="related-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
         <p class="related-price">${p['price']}</p>
-        <a href="{p['link']}" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+        <a href="{amazon_url}" target="_blank" class="related-buy-btn">Buy on Amazon</a>
     </div>
 </div>
 """
@@ -278,11 +280,31 @@ def main():
         favicon_tag = f'<link rel="icon" href="{favicon_url}"' + (f' type="{mime}">' if mime else '>')
 
     # 社交媒体链接（来自「关注我们」表）
+    # 社交名称 → 图标映射
+    social_icon_map = {
+        "facebook": "fab fa-facebook-f",
+        "twitter": "fab fa-twitter",
+        "x": "fab fa-x-twitter",
+        "instagram": "fab fa-instagram",
+        "youtube": "fab fa-youtube",
+        "tiktok": "fab fa-tiktok",
+        "pinterest": "fab fa-pinterest",
+        "linkedin": "fab fa-linkedin-in",
+        "whatsapp": "fab fa-whatsapp",
+        "telegram": "fab fa-telegram",
+        "wechat": "fab fa-weixin",
+        "微信": "fab fa-weixin",
+    }
     social_links_html = ""
     for item in social_data:
         fd = item["fields"]
-        url = s(fd.get("链接"), "#")
-        icon = s(fd.get("图标"), "fas fa-link")
+        url = s(fd.get("社交网址"))
+        name = s(fd.get("社交名称")).lower()
+        # 社交网址为空则不显示
+        if not url:
+            continue
+        # 根据社交名称匹配图标，找不到则用默认图标
+        icon = social_icon_map.get(name, "fas fa-link")
         social_links_html += f'<a href="{url}" target="_blank"><i class="{icon}"></i></a>\n'
 
     # 轮播图HTML（使用 .slider 结构）
