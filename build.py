@@ -325,6 +325,8 @@ def main():
     for prod in prod_list:
         fd = prod["fields"]
         raw_cat = fd.get("产品分类", "")
+        prod_title = s(fd.get("产品title"))
+        print(f"  商品 {prod_title}: 产品分类={repr(raw_cat)}")
         # 关联字段匹配：先尝试 record_id，再尝试 title 文本
         cat_info = None
         if isinstance(raw_cat, list) and raw_cat:
