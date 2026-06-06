@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>品1牌名称:网1站title</title>
+  <meta name="description" content="网站1描述">
+  <meta name="keywords" content="关1键词,关2键词">
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="品1牌名称">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="品1牌名称 | Home">
+  <meta property="og:description" content="网站1描述">
+  <meta property="og:site_name" content="品1牌名称">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:400&family=Inter:400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="http://auvcas.com/style.css">
+  <link rel="icon" href="/assets/GlkpbFURSoCwBvxLoiZcOZVNndb.svg" type="image/svg+xml">
+  
+</head>
+<body>
+  <header class="header">
+    <div class="discount-banner">
+      <div class="discount-code">顶部111通知栏</div>
+    </div>
+    <div class="header-logo-row">
+      <div class="logo">
+        <a href="/"><img src="/assets/SSf4bhJf1o5gYixkJQwc3y6inec.PNG" alt="品1牌名称"></a>
+        <h1><a href="/">品1牌名称</a></h1>
+      </div>
+      <div class="mobile-menu" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+    <div class="header-nav-row">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/Office-Supplies/">Office Supplies</a></li><li><a href="/Carrying-Cases/">Carrying Cases</a></li><li><a href="/66/">66</a></li>
+      </ul>
+    </div>
+  </header>
+
+<main>
+  <!-- 面包屑导航 -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/Office-Supplies/">Office Supplies</a>
+      <span>/</span>
+      <span class="current">222</span>
+    </div>
+  </div>
+  <!-- 商品详情 -->
+  <div class="container product-container">
+    <div class="product-images">
+      <div class="main-image">
+        <div class="image-carousel" id="imageCarousel">
+          <img src="" alt="Product 1" class="carousel-img active">
+
+        </div>
+        <div class="carousel-dots" id="carouselDots">
+          <span class="dot active" onclick="goToSlide(0)"></span>
+
+        </div>
+      </div>
+      <div class="thumbnail-images">
+        <div class="thumbnail active" onclick="changeImage(1)"><img src="" alt="Thumbnail 1"></div>
+
+      </div>
+    </div>
+    <div class="product-info">
+      <h1 class="product-title">222</h1>
+      <p class="product-price">$0</p>
+      <p class="product-description"></p>
+      <div class="product-actions">
+        <a href="#" target="_blank" class="buy-now-btn">Buy on Amazon</a>
+        <button class="share-btn" onclick="openShareModal()">
+          <i class="fas fa-share-alt"></i> Share
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 分享弹窗 -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-modal-overlay" onclick="closeShareModal()"></div>
+    <div class="share-modal-content">
+      <div class="share-header">
+        <span class="share-title">Share this product with friends</span>
+        <button class="share-close" onclick="closeShareModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="share-product">
+        <img src="" alt="Product" class="share-product-img">
+        <div class="share-product-info">
+          <p class="share-product-name">222</p>
+          <p class="share-product-price">$0</p>
+        </div>
+      </div>
+      <!-- 手机端分享按钮 -->
+      <div class="share-buttons share-buttons-mobile">
+        <button class="share-option" onclick="shareTo('messages')"><i class="fab fa-apple"></i><span>Messages</span></button>
+        <button class="share-option" onclick="shareTo('whatsapp')"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></button>
+        <button class="share-option" onclick="shareTo('copy')"><i class="fas fa-copy"></i><span>Copy</span></button>
+        <button class="share-option" onclick="shareTo('messenger')"><i class="fab fa-facebook-messenger"></i><span>Messenger</span></button>
+        <button class="share-option" onclick="shareTo('email')"><i class="fas fa-envelope"></i><span>Email</span></button>
+      </div>
+      <!-- 电脑端分享按钮 -->
+      <div class="share-buttons share-buttons-desktop">
+        <button class="share-option" onclick="shareTo('email')"><i class="fas fa-envelope"></i><span>Email</span></button>
+        <button class="share-option" onclick="shareTo('pinterest')"><i class="fab fa-pinterest"></i><span>Pinterest</span></button>
+        <button class="share-option" onclick="shareTo('facebook')"><i class="fab fa-facebook-f"></i><span>Facebook</span></button>
+        <button class="share-option" onclick="shareTo('x')"><i class="fab fa-x"></i><span>X</span></button>
+        <button class="share-option" onclick="shareTo('copy')"><i class="fas fa-copy"></i><span>Copy link</span></button>
+        <button class="share-option" onclick="shareTo('qr')"><i class="fas fa-qrcode"></i><span>Scan QR code</span></button>
+      </div>
+      <div class="share-toast" id="shareToast">
+        <i class="fas fa-check-circle"></i>
+        <span>Link copied to clipboard!</span>
+      </div>
+    </div>
+  </div>
+  <!-- 相关商品 -->
+  <div class="container related-products">
+    <h2 class="related-title">Frequently Bought Together</h2>
+    <div class="product-carousel-container">
+      <button class="carousel-btn prev" onclick="scrollRelatedProducts(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="related-grid" id="relatedGrid">
+        <div class="related-card">
+    <a href="/Office-Supplies/a1/">
+        <img src="" alt="L3001 Scanner" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Office-Supplies/a1/">L3001 Scanner</a></h3>
+        <p class="related-price">$16.99</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Office-Supplies/a4/">
+        <img src="" alt="333" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Office-Supplies/a4/">333</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a2/">
+        <img src="" alt="111" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a2/">111</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a5/">
+        <img src="" alt="555" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a5/">555</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a6/">
+        <img src="" alt="666" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a6/">666</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a7/">
+        <img src="" alt="777" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a7/">777</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a8/">
+        <img src="" alt="888" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a8/">888</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a9/">
+        <img src="" alt="999" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a9/">999</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a10/">
+        <img src="" alt="aaa" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a10/">aaa</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+<div class="related-card">
+    <a href="/Carrying-Cases/a11/">
+        <img src="" alt="bbb" class="related-img">
+    </a>
+    <div class="related-info">
+        <h3 class="related-name"><a href="/Carrying-Cases/a11/">bbb</a></h3>
+        <p class="related-price">$0</p>
+        <a href="#" target="_blank" class="related-buy-btn">Buy on Amazon</a>
+    </div>
+</div>
+
+      </div>
+      <button class="carousel-btn next" onclick="scrollRelatedProducts(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand">
+        <div class="logo">
+          <a href="/"><img src="/assets/SSf4bhJf1o5gYixkJQwc3y6inec.PNG" alt="品1牌名称"></a>
+          <h1><a href="/">品1牌名称</a></h1>
+        </div>
+        <p>网站1描述</p>
+      </div>
+      <div class="footer-col">
+        <h3>Categories</h3>
+        <ul>
+          <li><a href="/Office-Supplies/">Office Supplies</a></li><li><a href="/Carrying-Cases/">Carrying Cases</a></li><li><a href="/66/">66</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>About 品1牌名称</h3>
+        <ul>
+          <li><a href="/About-Us/">About Us</a></li><li><a href="/Shipping-Rates-Policies/">Shipping Rates & Policies</a></li><li><a href="/ttt/">ttt</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-social">
+        <h3>Follow Us</h3>
+        <div class="social">
+          <a href="#" target="_blank"><i class="fas fa-link"></i></a>
+<a href="#" target="_blank"><i class="fas fa-link"></i></a>
+<a href="#" target="_blank"><i class="fas fa-link"></i></a>
+<a href="#" target="_blank"><i class="fas fa-link"></i></a>
+<a href="#" target="_blank"><i class="fas fa-link"></i></a>
+
+        </div>
+        <p>Stay connected for exclusive offers and updates.</p>
+        <a href="#" class="back-to-top" onclick="scrollToTop()">TOP OF PAGE</a>
+      </div>
+    </div>
+    <div class="copyright">&copy; 2011 - 2026 The 品1牌名称 Company. All rights reserved.</div>
+  </div>
+</footer>
+<!--全站底部-自定义代码-->
+全站11底部自定义代码
+<script src="http://auvcas.com/script.js"></script>
+</body>
+</html>
+
