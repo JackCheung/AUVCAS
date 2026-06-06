@@ -246,9 +246,10 @@ def main():
     SITE_DOMAIN = s(cfg.get("网站url"))
 
     # 顶部通知 & 自定义代码（也来自「网站设置」表）
-    notice_html = s(cfg.get("通知内容"))
+    notice_html = s(cfg.get("顶部通知栏"))
     head_code = s(cfg.get("自定义head代码"))
-    foot_code = s(cfg.get("自定义foot代码"))
+    foot_code = s(cfg.get("全站底部-自定义代码"))
+    home_custom_code = s(cfg.get("首页底部-自定义代码"))
 
     # Favicon（来自「网站设置」表的附件字段，直接取URL）
     favicon_url = download_media(token, cfg.get("Favicon"))
@@ -398,7 +399,8 @@ def main():
         "category_list": cat_list_html,
         "product_list": prod_item_html,
         "new_product_list": new_prod_html,
-        "bestseller_list": bestseller_prod_html
+        "bestseller_list": bestseller_prod_html,
+        "home_custom_code": home_custom_code
     }
     index_html = render_template(tpl_index, index_data)
     index_path = os.path.join(OUTPUT_DIR, "index.html")
