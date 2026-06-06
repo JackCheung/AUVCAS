@@ -170,9 +170,10 @@ def download_media_list(token, val, save_dir="assets"):
 def gen_product_card(p, cat_map):
     """生成单个商品卡片HTML（用于首页/分类页横滚 & 网格）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
+    img_src = p['img'][0] if p['img'] else ""
     return f"""<div class="product-card">
     <a href="/{cat_slug}/{p['slug']}/">
-        <img src="{p['img']}" alt="{p['title']}">
+        <img src="{img_src}" alt="{p['title']}">
     </a>
     <div class="product-info">
         <h3 class="product-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
@@ -185,9 +186,10 @@ def gen_product_card(p, cat_map):
 def gen_related_card(p, cat_map):
     """生成相关商品卡片HTML（用于商品详情页底部）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
+    img_src = p['img'][0] if p['img'] else ""
     return f"""<div class="related-card">
     <a href="/{cat_slug}/{p['slug']}/">
-        <img src="{p['img']}" alt="{p['title']}" class="related-img">
+        <img src="{img_src}" alt="{p['title']}" class="related-img">
     </a>
     <div class="related-info">
         <h3 class="related-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
@@ -359,14 +361,13 @@ def main():
             "cat": cat_info["title"],
             "slug": s(fd.get("产品slug")),
             "title": s(fd.get("产品title")),
-            "img": download_media(token, fd.get("产品图片")),
+            "img": download_media_list(token, fd.get("产品图片")),
             "price": s(fd.get("单价", "0")),
             "asin": s(fd.get("asin")),
             "content": s(fd.get("产品简介")),
             "link": s(fd.get("跳转链接", "#")),
             "is_new": s(fd.get("新品", "否")) == "是",
-            "is_bestseller": s(fd.get("畅销品", "否")) == "是",
-            "images": download_media_list(token, fd.get("产品图片列表"))
+            "is_bestseller": s(fd.get("畅销品", "否")) == "是"
         })
     # 调试：打印第一个商品的图片原始数据
     if prod_list:
@@ -472,10 +473,8 @@ def main():
             prod_dir = os.path.join(cat_dir, prod_slug)
             mkdir(prod_dir)
 
-            # 商品多图处理
-            images = [p["img"]]
-            if p.get("images"):
-                images = p["images"] if isinstance(p["images"], list) else [p["images"]] if isinstance(p["images"], str) and p["images"].strip() else []
+            # 商品多图处理（p["img"] 现在是图片列表）
+            images = p["img"] if isinstance(p["img"], list) else [p["img"]] if p["img"] else []
 
             images_html = ""
             dots_html = ""
@@ -497,7 +496,7 @@ def main():
                 "header": header_rendered,
                 "footer": footer_rendered,
                 "product_title": p["title"],
-                "product_img": p["img"],
+                "product_img": p["img"][0] if p["img"] else "",
                 "product_price": p["price"],
                 "product_asin": p["asin"],
                 "product_content": p["content"],
