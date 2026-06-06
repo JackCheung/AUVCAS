@@ -250,6 +250,18 @@ def main():
     head_code = s(cfg.get("自定义head代码"))
     foot_code = s(cfg.get("全站底部-自定义代码"))
     home_custom_code = s(cfg.get("首页底部-自定义代码"))
+    primary_color = s(cfg.get("主色"), "#133CD1")
+    secondary_color = s(cfg.get("辅助色"), "#00d2d3")
+
+    # 字体设置（格式如 "Inter,700"）
+    heading_font_raw = s(cfg.get("标题字体和字重"), "Noto Sans,700")
+    body_font_raw = s(cfg.get("正文字体和字重"), "Noto Sans,400")
+    heading_font, heading_weight = heading_font_raw.split(",")[0].strip(), heading_font_raw.split(",")[1].strip() if "," in heading_font_raw else "700"
+    body_font, body_weight = body_font_raw.split(",")[0].strip(), body_font_raw.split(",")[1].strip() if "," in body_font_raw else "400"
+    # 生成 Google Fonts URL（合并所有字重）
+    weights = sorted(set([heading_weight, body_weight, "400"]))  # 确保包含400
+    weights_str = ";".join(weights)
+    google_fonts_url = f"https://fonts.googleapis.com/css2?family={heading_font.replace(' ', '+')}:{weights_str}&family={body_font.replace(' ', '+')}:{weights_str}&display=swap"
 
     # Favicon（来自「网站设置」表的附件字段，直接取URL）
     favicon_url = download_media(token, cfg.get("Favicon"))
@@ -368,6 +380,8 @@ def main():
         "page_keywords": site_keywords,
         "page_desc": site_desc,
         "site_logo": site_logo,
+        "SITE_DOMAIN": SITE_DOMAIN,
+        "google_fonts_url": google_fonts_url,
         "favicon_tag": favicon_tag,
         "top_notice": notice_html,
         "category_nav": cat_nav_html,
@@ -380,6 +394,7 @@ def main():
         "site_name": site_name,
         "site_logo": site_logo,
         "site_desc": site_desc,
+        "SITE_DOMAIN": SITE_DOMAIN,
         "social_links": social_links_html,
         "category_nav_footer": cat_nav_footer_html,
         "custom_page_nav_footer": page_nav_footer_html,
@@ -499,9 +514,19 @@ def main():
             f.write(page_html)
         all_sitemap_urls.append(f"{SITE_DOMAIN}/{slug}/")
 
-    # ===================== 4. 复制静态资源 & CNAME =====================
+    # ===================== 4. 渲染静态资源 & CNAME =====================
     import shutil
-    shutil.copy(os.path.join(TEMPLATE_DIR, "style.css"), os.path.join(OUTPUT_DIR, "style.css"))
+    # style.css 用模板渲染（支持颜色占位符）
+    tpl_css = load_template("style.css")
+    css_data = {
+            "primary_color": primary_color,
+            "secondary_color": secondary_color,
+            "heading_font": heading_font,
+            "body_font": body_font
+        }
+    css_rendered = render_template(tpl_css, css_data)
+    with open(os.path.join(OUTPUT_DIR, "style.css"), "w", encoding="utf-8") as f:
+        f.write(css_rendered)
     shutil.copy(os.path.join(TEMPLATE_DIR, "script.js"), os.path.join(OUTPUT_DIR, "script.js"))
     if os.path.exists("CNAME"):
         shutil.copy("CNAME", os.path.join(OUTPUT_DIR, "CNAME"))
