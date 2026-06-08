@@ -392,6 +392,7 @@ def main():
             "asin": s(fd.get("asin")),
             "content": s(fd.get("产品简介")),
             "desc": s(fd.get("产品description")) or s(fd.get("产品简介")),
+            "keywords": s(fd.get("产品keywords")),
             "link": s(fd.get("跳转链接", "#")),
             "is_new": s(fd.get("新品", "否")) == "是",
             "is_bestseller": s(fd.get("畅销品", "否")) == "是"
@@ -539,7 +540,7 @@ def main():
             prod_page_data = {
                 "header": make_header(tpl_header_product, {
                     "product_title": p["title"],
-                    "product_keywords": p["title"],
+                    "product_keywords": p["keywords"],
                     "product_description": p["desc"]
                 }),
                 "footer": footer_rendered,
