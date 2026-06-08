@@ -294,6 +294,7 @@ def main():
         "telegram": "fab fa-telegram",
         "wechat": "fab fa-weixin",
         "微信": "fab fa-weixin",
+        "amazon": "fab fa-amazon",
     }
     social_links_html = ""
     for item in social_data:
