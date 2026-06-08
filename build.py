@@ -23,7 +23,7 @@ TABLE_NAMES = {
     "social": "关注我们",
     "categories": "产品分类",
     "products": "全部产品",
-    "custom_pages": "通用页面"
+    "custom_pages": "通用页"
 }
 
 # 站点域名（从飞书「网站设置」表读取）
@@ -341,9 +341,9 @@ def main():
     page_map = {}
     for page in page_list:
         fd = page["fields"]
-        slug = s(fd.get("页面slug"))
-        title = s(fd.get("页面title"))
-        page_map[slug] = {"title": title, "content": s(fd.get("正文")), "kw": s(fd.get("分类keywords")), "desc": s(fd.get("分类description"))}
+        slug = s(fd.get("通用slug"))
+        title = s(fd.get("通用title"))
+        page_map[slug] = {"title": title, "content": s(fd.get("正文")), "kw": s(fd.get("通用keywords")), "desc": s(fd.get("通用description"))}
         page_nav_html += f'<li><a href="/{slug}/">{title}</a></li>'
         page_nav_footer_html += f'<li><a href="/{slug}/">{title}</a></li>'
 
