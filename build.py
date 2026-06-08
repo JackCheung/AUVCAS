@@ -174,7 +174,7 @@ def gen_product_card(p, cat_map):
     amazon_url = f"https://www.amazon.com/dp/{p['asin']}/" if p['asin'] else p['link']
     return f"""<div class="product-card">
     <a href="/{cat_slug}/{p['slug']}/">
-        <img src="{img_src}" alt="{p['title']}">
+        <img src="{img_src}" alt="{p['title']}" class="product-img">
     </a>
     <div class="product-info">
         <h3 class="product-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
