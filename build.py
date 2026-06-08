@@ -245,6 +245,7 @@ def main():
     site_name = s(cfg.get("品牌名称"), "Site")
     site_title = s(cfg.get("网站title"), site_name)
     site_logo = download_media(token, cfg.get("网站logo"))
+    og_image = download_media(token, cfg.get("og图片"))
     site_keywords = s(cfg.get("网站keywords"))
     site_desc = s(cfg.get("网站description"))
     global SITE_DOMAIN
@@ -422,6 +423,7 @@ def main():
         "page_keywords": site_keywords,
         "page_desc": site_desc,
         "site_logo": site_logo,
+        "og_image": og_image,
         "SITE_DOMAIN": SITE_DOMAIN,
         "google_fonts_url": google_fonts_url,
         "favicon_tag": favicon_tag,
