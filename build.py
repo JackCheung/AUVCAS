@@ -385,7 +385,7 @@ def main():
             "cat": cat_info["title"],
             "slug": s(fd.get("产品slug")),
             "title": s(fd.get("产品title")),
-            "img": download_media_list(token, fd.get("产品图片")),
+            "img": download_media_list(token, fd.get("产品图片"))[::-1],
             "price": s(fd.get("单价", "0")),
             "asin": s(fd.get("asin")),
             "content": s(fd.get("产品简介")),
