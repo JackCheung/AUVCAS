@@ -410,7 +410,10 @@ def main():
     bestseller_products = [p for p in prod_map if p["is_bestseller"]][:30]
 
     # 加载公共模板
-    tpl_header = load_template("header.html")
+    tpl_header_index = load_template("header_index.html")
+    tpl_header_category = load_template("header_category.html")
+    tpl_header_product = load_template("header_product.html")
+    tpl_header_custom = load_template("header_custom.html")
     tpl_footer = load_template("footer.html")
     tpl_index = load_template("index.html")
     tpl_category = load_template("category.html")
@@ -446,19 +449,20 @@ def main():
         "custom_head_code": head_code
     }
 
-    def make_header(page_title, page_keywords="", page_desc=""):
-        """生成带独立 SEO 的 header HTML"""
+    def make_header(tpl, seo):
+        """生成带独立 SEO 的 header HTML，seo 为页面专属变量字典"""
         d = dict(base_header_data)
-        d["page_title"] = page_title
-        d["page_keywords"] = page_keywords
-        d["page_desc"] = page_desc
-        return render_template(tpl_header, d)
+        d.update(seo)
+        return render_template(tpl, d)
 
     # ===================== 1. 生成首页 =====================
     prod_item_html = "".join(gen_product_card(p, cat_map) for p in prod_map)
     new_prod_html = "".join(gen_product_card(p, cat_map) for p in new_products)
     bestseller_prod_html = "".join(gen_product_card(p, cat_map) for p in bestseller_products)
-    index_header = make_header(site_title, site_keywords, site_desc)
+    index_header = make_header(tpl_header_index, {
+        "index_keywords": site_keywords,
+        "index_description": site_desc
+    })
 
     index_data = {
         "header": index_header,
@@ -488,7 +492,11 @@ def main():
         cat_prod_html = "".join(gen_product_card(p, cat_map) for p in cat_prods)
 
         # 生成分类列表页
-        cat_header = make_header(cat_name, cat_info.get("kw", ""), cat_desc)
+        cat_header = make_header(tpl_header_category, {
+            "category_title": cat_name,
+            "category_keywords": cat_info.get("kw", ""),
+            "category_description": cat_desc
+        })
         cat_page_data = {
             "header": cat_header,
             "footer": footer_rendered,
@@ -529,7 +537,11 @@ def main():
             related_html = "".join(gen_related_card(rp, cat_map) for rp in related)
 
             prod_page_data = {
-                "header": make_header(p["title"], p["title"], p["desc"]),
+                "header": make_header(tpl_header_product, {
+                    "product_title": p["title"],
+                    "product_keywords": p["title"],
+                    "product_description": p["desc"]
+                }),
                 "footer": footer_rendered,
                 "product_title": p["title"],
                 "product_img": p["img"][0] if p["img"] else "",
@@ -555,7 +567,11 @@ def main():
         page_dir = os.path.join(OUTPUT_DIR, slug)
         mkdir(page_dir)
         page_data = {
-            "header": make_header(page_info["title"], page_info.get("kw", ""), page_info.get("desc", "")),
+            "header": make_header(tpl_header_custom, {
+                "custom_title": page_info["title"],
+                "custom_keywords": page_info.get("kw", ""),
+                "custom_description": page_info.get("desc", "")
+            }),
             "footer": footer_rendered,
             "page_title": page_info["title"],
             "page_content": page_info["content"]

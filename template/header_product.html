@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{product_title}} - {{site_name}}</title>
+  <meta name="description" content="{{product_description}}">
+  <meta name="keywords" content="{{product_keywords}}">
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="{{site_name}}">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{product_title}} | {{site_name}}">
+  <meta property="og:description" content="{{product_description}}">
+  <meta property="og:site_name" content="{{site_name}}">
+  <meta property="og:image" content="{{SITE_DOMAIN}}{{og_image}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="{{google_fonts_url}}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{SITE_DOMAIN}}/style.css">
+  {{favicon_tag}}
+  {{custom_head_code}}
+</head>
+<body>
+  <header class="header">
+    <div class="discount-banner">
+      <div class="discount-code">{{top_notice}}</div>
+    </div>
+    <div class="header-logo-row">
+      <div class="logo">
+        <a href="/"><img src="{{site_logo}}" alt="{{site_name}}"></a>
+        <h1><a href="/">{{site_name}}</a></h1>
+      </div>
+      <div class="mobile-menu" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+    <div class="header-nav-row">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        {{category_nav}}
+      </ul>
+    </div>
+  </header>
