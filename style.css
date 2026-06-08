@@ -892,15 +892,15 @@ p {
 }
 
 .share-buttons-mobile .share-option:nth-child(1) i { color: #555; }
-.share-buttons-mobile .share-option:nth-child(2) i { color: #25D366; }
-.share-buttons-mobile .share-option:nth-child(3) i { color: #666; }
-.share-buttons-mobile .share-option:nth-child(4) i { color: #0866FF; }
-.share-buttons-mobile .share-option:nth-child(5) i { color: #666; }
+.share-buttons-mobile .share-option:nth-child(2) i { color: #555; }
+.share-buttons-mobile .share-option:nth-child(3) i { color: #555; }
+.share-buttons-mobile .share-option:nth-child(4) i { color: #555; }
+.share-buttons-mobile .share-option:nth-child(5) i { color: #555; }
 
 .share-buttons-desktop .share-option:nth-child(1) i { color: #666; }
-.share-buttons-desktop .share-option:nth-child(2) i { color: #E60023; }
-.share-buttons-desktop .share-option:nth-child(3) i { color: #0866FF; }
-.share-buttons-desktop .share-option:nth-child(4) i { color: #14171A; }
+.share-buttons-desktop .share-option:nth-child(2) i { color: #666; }
+.share-buttons-desktop .share-option:nth-child(3) i { color: #666; }
+.share-buttons-desktop .share-option:nth-child(4) i { color: #666; }
 .share-buttons-desktop .share-option:nth-child(5) i { color: #666; }
 .share-buttons-desktop .share-option:nth-child(6) i { color: #666; }
 
