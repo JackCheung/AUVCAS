@@ -473,8 +473,8 @@ def main():
         cat_dir = os.path.join(OUTPUT_DIR, cat_slug)
         mkdir(cat_dir)
 
-        # 当前分类下商品
-        cat_prods = [p for p in prod_map if p["cat"] == cat_name]
+        # 当前分类下商品（新发布的显示在前面，反序）
+        cat_prods = [p for p in prod_map if p["cat"] == cat_name][::-1]
         cat_prod_html = "".join(gen_product_card(p, cat_map) for p in cat_prods)
 
         # 生成分类列表页
