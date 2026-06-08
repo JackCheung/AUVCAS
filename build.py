@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import requests
 from urllib.parse import quote
 
@@ -230,7 +231,7 @@ def main():
     mkdir(OUTPUT_DIR)
     all_sitemap_urls = []
 
-    # 1. 获取飞书全量数据
+    # 获取飞书全量数据
     token = get_tenant_token()
     table_map = list_tables(token)  # {"网站设置": "tblxxx", "全部产品": "tblyyy", ...}
     site_config = get_table_records(token, table_map[TABLE_NAMES["site_config"]])
@@ -333,7 +334,6 @@ def main():
         cat_nav_footer_html += f'<li><a href="/{slug}/">{title}</a></li>'
         cat_list_html += f'<a href="/{slug}/">{title}</a>'
     print(f"  分类映射: {list(cat_map.keys())}")
-    print(f"  分类ID映射: {list(cat_id_map.keys())}")
 
     # 自定义页面导航（头部 + 页脚）
     page_nav_html = ""
@@ -353,8 +353,6 @@ def main():
     for prod in prod_list:
         fd = prod["fields"]
         raw_cat = fd.get("产品分类", "")
-        prod_title = s(fd.get("产品title"))
-        # print(f"  商品 {prod_title}: 产品分类={repr(raw_cat)}")
         # 关联字段匹配：先尝试 record_id，再尝试 text 文本
         cat_info = None
         if isinstance(raw_cat, list) and raw_cat:
@@ -397,11 +395,6 @@ def main():
             "is_new": s(fd.get("新品", "否")) == "是",
             "is_bestseller": s(fd.get("畅销品", "否")) == "是"
         })
-    # 调试：打印第一个商品的图片原始数据
-    if prod_list:
-        first_img_raw = prod_list[0]["fields"].get("产品图片")
-        print(f"  产品图片原始格式: {repr(first_img_raw)}")
-
     if no_match_cats:
         print(f"  ⚠️ 以下产品分类未匹配到分类表: {no_match_cats}")
         print(f"     分类表可用key: {list(cat_map.keys())} / {list(cat_id_map.keys())}")
@@ -456,7 +449,7 @@ def main():
         d.update(seo)
         return render_template(tpl, d)
 
-    # ===================== 1. 生成首页 =====================
+    # ===================== 生成首页 =====================
     prod_item_html = "".join(gen_product_card(p, cat_map) for p in prod_map)
     new_prod_html = "".join(gen_product_card(p, cat_map) for p in new_products)
     bestseller_prod_html = "".join(gen_product_card(p, cat_map) for p in bestseller_products)
@@ -481,7 +474,7 @@ def main():
         f.write(index_html)
     all_sitemap_urls.append(f"{SITE_DOMAIN}/")
 
-    # ===================== 2. 生成分类列表页 + 商品详情页 =====================
+    # ===================== 生成分类列表页 + 商品详情页 =====================
     for cat_name, cat_info in cat_map.items():
         cat_slug = cat_info["slug"]
         cat_desc = cat_info["desc"]
@@ -563,7 +556,7 @@ def main():
                 f.write(prod_html)
             all_sitemap_urls.append(f"{SITE_DOMAIN}/{cat_slug}/{prod_slug}/")
 
-    # ===================== 3. 生成自定义页面 =====================
+    # ===================== 生成自定义页面 =====================
     for slug, page_info in page_map.items():
         page_dir = os.path.join(OUTPUT_DIR, slug)
         mkdir(page_dir)
@@ -583,8 +576,7 @@ def main():
             f.write(page_html)
         all_sitemap_urls.append(f"{SITE_DOMAIN}/{slug}/")
 
-    # ===================== 4. 渲染静态资源 & CNAME =====================
-    import shutil
+    # ===================== 渲染静态资源 & CNAME =====================
     # style.css 用模板渲染（支持颜色占位符）
     tpl_css = load_template("style.css")
     css_data = {
@@ -601,7 +593,7 @@ def main():
         shutil.copy("CNAME", os.path.join(OUTPUT_DIR, "CNAME"))
     print("✅ style.css、script.js、CNAME 已复制到 public/")
 
-    # ===================== 5. 生成 robots.txt & sitemap.xml =====================
+    # ===================== 生成 robots.txt & sitemap.xml =====================
     gen_robots()
     gen_sitemap(all_sitemap_urls)
     print("✅ 全部页面生成完成！")
