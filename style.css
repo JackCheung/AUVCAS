@@ -15,8 +15,8 @@ body {
   --primary: #133CD1;
   --accent: var(--primary);
   --secondary: #00d2d3;
-  --heading-font: 'Inter';
-  --body-font: 'Inter';
+  --heading-font: 'Montserrat';
+  --body-font: 'Open Sans';
   --white: #ffffff;
   --light: #F0F7FF;
   --gray: #636e72;
