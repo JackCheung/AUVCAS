@@ -257,6 +257,7 @@ def main():
     home_custom_code = s(cfg.get("首页底部-自定义代码"))
     primary_color = s(cfg.get("主色"), "#133CD1")
     secondary_color = s(cfg.get("辅助色"), "#00d2d3")
+    copyright_text = s(cfg.get("版权信息"), f"&copy; 2011 - 2026 The {site_name} Company. All rights reserved.")
 
     # 字体设置（格式如 "Inter,700"）
     heading_font_raw = s(cfg.get("标题字体和字重"), "Noto Sans,700")
@@ -439,7 +440,8 @@ def main():
         "social_links": social_links_html,
         "category_nav_footer": cat_nav_footer_html,
         "custom_page_nav_footer": page_nav_footer_html,
-        "custom_foot_code": foot_code
+        "custom_foot_code": foot_code,
+        "copyright_text": copyright_text
     }
     footer_rendered = render_template(tpl_footer, footer_data)
 
