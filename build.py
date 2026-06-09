@@ -212,8 +212,9 @@ def gen_slider_html(carousel_data, token):
         fd = item["fields"]
         img = download_media(token, fd.get("轮播图片"))
         link = s(fd.get("图片链接"), "#")
+        alt_text = s(fd.get("图片文本alt"), f"Banner {idx+1}")
         active = "active" if idx == 0 else ""
-        slides_html += f'<div class="slide {active}"><a href="{link}" target="_blank"><img src="{img}" alt="Banner {idx+1}"></a></div>\n'
+        slides_html += f'<div class="slide {active}"><a href="{link}" target="_blank"><img src="{img}" alt="{alt_text}"></a></div>\n'
         dots_html += f'<div class="slider-dot {active}" onclick="goToSlide({idx})"></div>\n'
 
     return f"""<div class="slider">
