@@ -270,7 +270,7 @@ def main():
     # 生成 Google Fonts URL（合并所有字重）
     weights = sorted(set([heading_weight, body_weight, "400"]))  # 确保包含400
     weights_str = ";".join(weights)
-    google_fonts_url = f"https://fonts.googleapis.com/css2?family={heading_font.replace(' ', '+')}:{weights_str}&family={body_font.replace(' ', '+')}:{weights_str}&display=swap"
+    google_fonts_url = f"https://fonts.googleapis.com/css2?family={heading_font.replace(' ', '+')}:wght@{weights_str}&family={body_font.replace(' ', '+')}:wght@{weights_str}&display=swap"
 
     # Favicon（来自「网站设置」表的附件字段，直接取URL）
     favicon_url = download_media(token, cfg.get("Favicon"))
