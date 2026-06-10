@@ -21,8 +21,8 @@ jobs:
           python-version: "3.10"
           cache: "pip"
 
-      - name: Install requests
-        run: pip install requests
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       - name: Run build script
         run: python build.py
