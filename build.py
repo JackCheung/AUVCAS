@@ -247,6 +247,17 @@ def main():
     site_name = s(cfg.get("品牌名称"), "Site")
     site_title = s(cfg.get("网站title"), site_name)
     site_logo = download_media(token, cfg.get("网站logo"))
+    logo_display = s(cfg.get("logo显示"), "都显示")
+    # 根据 logo显示 设置生成 header / footer 的 logo HTML
+    if logo_display == "只显示logo":
+        header_logo_html = '<div class="logo"><a href="/"><img src="' + site_logo + '" alt="' + site_name + '"></a></div>'
+        footer_logo_html = header_logo_html
+    elif logo_display == "只显示品牌名称":
+        header_logo_html = '<div class="logo"><h1><a href="/">' + site_name + '</a></h1></div>'
+        footer_logo_html = header_logo_html
+    else:  # 都显示
+        header_logo_html = '<div class="logo"><a href="/"><img src="' + site_logo + '" alt="' + site_name + '"></a><h1><a href="/">' + site_name + '</a></h1></div>'
+        footer_logo_html = header_logo_html
     og_image = download_media(token, cfg.get("og图片"))
     site_keywords = s(cfg.get("网站keywords"))
     site_desc = s(cfg.get("网站description"))
@@ -419,6 +430,7 @@ def main():
     footer_data = {
         "site_name": site_name,
         "site_logo": site_logo,
+        "footer_logo_html": footer_logo_html,
         "site_desc": site_desc,
         "SITE_DOMAIN": SITE_DOMAIN,
         "social_links": social_links_html,
@@ -434,6 +446,7 @@ def main():
         "site_name": site_name,
         "site_title": site_title,
         "site_logo": site_logo,
+        "header_logo_html": header_logo_html,
         "og_image": og_image,
         "SITE_DOMAIN": SITE_DOMAIN,
         "google_fonts_url": google_fonts_url,
