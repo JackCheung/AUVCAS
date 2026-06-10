@@ -1,37 +1,37 @@
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.slider-dot');
-let index = 0;
+let slideIndex = 0;
 
 function updateSlides() {
   slides.forEach((slide, i) => {
     slide.classList.remove('active', 'prev', 'next');
-    if (i === index) slide.classList.add('active');
-    else if (i === (index - 1 + slides.length) % slides.length) slide.classList.add('prev');
-    else if (i === (index + 1) % slides.length) slide.classList.add('next');
+    if (i === slideIndex) slide.classList.add('active');
+    else if (i === (slideIndex - 1 + slides.length) % slides.length) slide.classList.add('prev');
+    else if (i === (slideIndex + 1) % slides.length) slide.classList.add('next');
   });
   dots.forEach((dot, i) => {
     dot.classList.remove('active');
-    if (i === index) dot.classList.add('active');
+    if (i === slideIndex) dot.classList.add('active');
   });
 }
 
 function showSlide() {
-  index = (index + 1) % slides.length;
+  slideIndex = (slideIndex + 1) % slides.length;
   updateSlides();
 }
 
 function prevSlide() {
-  index = (index - 1 + slides.length) % slides.length;
+  slideIndex = (slideIndex - 1 + slides.length) % slides.length;
   updateSlides();
 }
 
 function nextSlide() {
-  index = (index + 1) % slides.length;
+  slideIndex = (slideIndex + 1) % slides.length;
   updateSlides();
 }
 
 function goToSlide(i) {
-  index = i;
+  slideIndex = i;
   updateSlides();
 }
 
@@ -122,37 +122,6 @@ function closeQrModal() {
   if (qrModal) qrModal.remove();
 }
 
-function copyLinkFallback(text, shareToast) {
-  // 创建临时 textarea 元素
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  textArea.style.position = 'fixed';
-  textArea.style.left = '-9999px';
-  textArea.style.top = '0';
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  
-  try {
-    const successful = document.execCommand('copy');
-    if (successful && shareToast) {
-      shareToast.classList.add('active');
-      setTimeout(() => {
-        shareToast.classList.remove('active');
-        closeShareModal();
-      }, 2000);
-    } else if (successful) {
-      closeShareModal();
-    }
-  } catch (err) {
-    console.error('复制失败:', err);
-    alert('复制失败，请手动复制链接: ' + text);
-    closeShareModal();
-  }
-  
-  document.body.removeChild(textArea);
-}
-
 function shareTo(platform) {
   const shareToast = document.getElementById('shareToast');
   const url = encodeURIComponent(window.location.href);
@@ -162,7 +131,6 @@ function shareTo(platform) {
   switch (platform) {
     case 'copy':
       shouldCloseModal = false;
-      // 尝试使用现代 Clipboard API
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(originalUrl).then(() => {
           if (shareToast) {
@@ -174,13 +142,9 @@ function shareTo(platform) {
           } else {
             closeShareModal();
           }
-        }).catch(err => {
-          // 如果失败，使用备用方法
-          copyLinkFallback(originalUrl, shareToast);
+        }).catch(() => {
+          closeShareModal();
         });
-      } else {
-        // 使用备用方法
-        copyLinkFallback(originalUrl, shareToast);
       }
       break;
     case 'email':
