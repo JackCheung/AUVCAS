@@ -63,7 +63,7 @@ p {
   content: '';
   width: 60px;
   height: 3px;
-  background: var(--accent);
+  background: var(--primary);
   display: block;
   margin: 10px auto;
 }
@@ -207,7 +207,7 @@ p {
 }
 
 .slider-prev:hover, .slider-next:hover {
-  background: var(--accent);
+  background: var(--primary);
   color: var(--white);
 }
 
@@ -271,7 +271,7 @@ p {
 }
 
 .product-carousel::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 5px;
 }
 
