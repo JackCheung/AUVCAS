@@ -250,7 +250,8 @@ def main():
     logo_display = s(cfg.get("logo显示"), "都显示")
     # 根据 logo显示 设置生成 header / footer 的 logo HTML
     if logo_display == "只显示logo":
-        header_logo_html = '<div class="logo"><a href="/"><img src="' + site_logo + '" alt="' + site_name + '"></a></div>'
+        _hidden_h1 = '<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"><a href="/">' + site_name + '</a></h1>'
+        header_logo_html = '<div class="logo"><a href="/"><img src="' + site_logo + '" alt="' + site_name + '"></a>' + _hidden_h1 + '</div>'
         footer_logo_html = header_logo_html
     elif logo_display == "只显示品牌名称":
         header_logo_html = '<div class="logo"><h1><a href="/">' + site_name + '</a></h1></div>'
