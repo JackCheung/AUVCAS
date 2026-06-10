@@ -17,7 +17,7 @@ body {
 
 :root {
   --primary: {{primary_color}};
-  --accent: var(--primary);
+  --accent: var(--secondary);
   --secondary: {{secondary_color}};
   --heading-font: '{{heading_font}}';
   --body-font: '{{body_font}}';
