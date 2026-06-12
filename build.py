@@ -53,7 +53,7 @@ def list_tables(token):
     return {item["name"]: item["table_id"] for item in data["data"]["items"]}
 
 def get_table_records(token, table_id):
-    """分页获取数据表全部记录"""
+    """分页获取数据表全部记录，按 record_id 升序排列"""
     all_items = []
     page_token = None
     while True:
@@ -70,6 +70,7 @@ def get_table_records(token, table_id):
         page_token = data.get("data", {}).get("page_token")
         if not page_token:
             break
+    all_items.sort(key=lambda x: x.get("record_id", ""))
     return all_items
 
 # ===================== 模板渲染 =====================
