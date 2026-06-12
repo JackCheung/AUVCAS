@@ -964,12 +964,12 @@ p {
 }
 
 .related-grid::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--primary);
   border-radius: 5px;
 }
 
 .related-grid::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 5px;
 }
 
