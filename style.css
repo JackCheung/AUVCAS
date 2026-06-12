@@ -198,6 +198,7 @@ p {
   height: 50px;
   border-radius: 50%;
   font-size: 24px;
+  color: var(--primary);
   cursor: pointer;
   z-index: 10;
   display: flex;
@@ -964,7 +965,7 @@ p {
 }
 
 .related-grid::-webkit-scrollbar-track {
-  background: var(--primary);
+  background: #f1f1f1;
   border-radius: 5px;
 }
 
