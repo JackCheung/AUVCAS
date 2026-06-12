@@ -238,7 +238,10 @@ def main():
     carousel_data = get_table_records(token, table_map[TABLE_NAMES["carousel"]])
     social_data = get_table_records(token, table_map[TABLE_NAMES["social"]])
     cat_list = get_table_records(token, table_map[TABLE_NAMES["categories"]])
-    print(f"  分类表字段: {list(cat_list[0]['fields'].keys()) if cat_list else 'empty'}")
+    if cat_list:
+        print(f"  首条完整记录: {cat_list[0]}")
+    for cat in cat_list:
+        print(f"    record_id={cat.get('record_id', 'N/A')}, fields={list(cat['fields'].keys())}")
     prod_list = get_table_records(token, table_map[TABLE_NAMES["products"]])
     page_list = get_table_records(token, table_map[TABLE_NAMES["custom_pages"]])
     # 按「序号」字段升序排列
