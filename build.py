@@ -52,12 +52,14 @@ def list_tables(token):
         raise SystemExit(1)
     return {item["name"]: item["table_id"] for item in data["data"]["items"]}
 
-def get_table_records(token, table_id):
-    """分页获取数据表全部记录（按飞书表格拖拽排序顺序返回）"""
+def get_table_records(token, table_id, view_id=None):
+    """分页获取数据表全部记录，可指定视图排序"""
     all_items = []
     page_token = None
     while True:
         url = f"{BASE_API}/bitable/v1/apps/{BASE_TOKEN}/tables/{table_id}/records?page_size=500"
+        if view_id:
+            url += f"&view_id={view_id}"
         if page_token:
             url += f"&page_token={page_token}"
         headers = {"Authorization": f"Bearer {token}"}
@@ -233,26 +235,19 @@ def main():
 
     # 获取飞书全量数据
     token = get_tenant_token()
-    table_map = list_tables(token)  # {"网站设置": "tblxxx", "全部产品": "tblyyy", ...}
+    table_map = list_tables(token)
     site_config = get_table_records(token, table_map[TABLE_NAMES["site_config"]])
     carousel_data = get_table_records(token, table_map[TABLE_NAMES["carousel"]])
     social_data = get_table_records(token, table_map[TABLE_NAMES["social"]])
     cat_list = get_table_records(token, table_map[TABLE_NAMES["categories"]])
-    if cat_list:
-        print(f"  首条完整记录: {cat_list[0]}")
-    for cat in cat_list:
-        print(f"    record_id={cat.get('record_id', 'N/A')}, fields={list(cat['fields'].keys())}")
     prod_list = get_table_records(token, table_map[TABLE_NAMES["products"]])
     page_list = get_table_records(token, table_map[TABLE_NAMES["custom_pages"]])
-    # 按「序号」字段升序排列
-    for cat in cat_list:
-        fd = cat.get("fields", {})
-        print(f"    {fd.get('分类title', '?')}: 序号={fd.get('序号', 'N/A')}")
-    carousel_data.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
-    social_data.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
-    cat_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
-    prod_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
-    page_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
+    # 按「编号」字段升序排列
+    carousel_data.sort(key=lambda x: int(x.get("fields", {}).get("编号", 9999)))
+    social_data.sort(key=lambda x: int(x.get("fields", {}).get("编号", 9999)))
+    cat_list.sort(key=lambda x: int(x.get("fields", {}).get("编号", 9999)))
+    prod_list.sort(key=lambda x: int(x.get("fields", {}).get("编号", 9999)))
+    page_list.sort(key=lambda x: int(x.get("fields", {}).get("编号", 9999)))
 
     # 基础站点信息（来自「网站设置」表）
     cfg = site_config[0]["fields"] if site_config else {}
