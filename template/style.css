@@ -1665,6 +1665,41 @@ p {
   .footer-inner { grid-template-columns: repeat(2, 1fr); gap: 30px; }
   .header-nav-row { position: relative; background: #F0F7FF; width: 100%; }
   .nav-list { background: #F0F7FF; }
+  /* 分类页商品卡片：左图右信息 */
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .category-grid .product-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+  }
+  .category-grid .product-img {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    border-radius: 6px;
+  }
+  .category-grid .product-info {
+    flex: 1;
+    padding: 0;
+    text-align: left;
+  }
+  .category-grid .product-name {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .category-grid .product-price {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .category-grid .buy-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
