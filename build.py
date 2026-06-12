@@ -240,6 +240,12 @@ def main():
     cat_list = get_table_records(token, table_map[TABLE_NAMES["categories"]])
     prod_list = get_table_records(token, table_map[TABLE_NAMES["products"]])
     page_list = get_table_records(token, table_map[TABLE_NAMES["custom_pages"]])
+    # 按「序号」字段升序排列
+    carousel_data.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
+    social_data.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
+    cat_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
+    prod_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
+    page_list.sort(key=lambda x: int(x.get("fields", {}).get("序号", 9999)))
 
     # 基础站点信息（来自「网站设置」表）
     cfg = site_config[0]["fields"] if site_config else {}
