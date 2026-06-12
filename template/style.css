@@ -296,7 +296,7 @@ p {
 }
 
 .carousel-btn:hover {
-  background: var(--accent);
+  background: var(--primary);
   color: var(--white);
 }
 
@@ -526,7 +526,7 @@ p {
 }
 
 .thumbnail:hover, .thumbnail.active {
-  border-color: var(--accent);
+  border-color: var(--primary);
 }
 
 .thumbnail img {
