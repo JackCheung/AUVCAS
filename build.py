@@ -598,6 +598,20 @@ def main():
             f.write(page_html)
         all_sitemap_urls.append(f"{SITE_DOMAIN}/{slug}/")
 
+    # ===================== 生成 404 页面 =====================
+    tpl_404 = load_template("404.html")
+    page_404_data = {
+        "header": make_header(tpl_header_custom, {
+            "custom_title": "404 - Page Not Found",
+            "custom_keywords": "",
+            "custom_description": ""
+        }),
+        "footer": footer_rendered
+    }
+    page_404_html = render_template(tpl_404, page_404_data)
+    with open(os.path.join(OUTPUT_DIR, "404.html"), "w", encoding="utf-8") as f:
+        f.write(page_404_html)
+
     # ===================== 渲染静态资源 & CNAME =====================
     # style.css 用模板渲染（支持颜色占位符）
     tpl_css = load_template("style.css")
