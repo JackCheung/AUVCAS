@@ -552,11 +552,17 @@ def main():
                 related += other_prods[:15 - len(related)]
             related_html = "".join(gen_related_card(rp, cat_map) for rp in related)
 
+            # og:image 必须是绝对 URL
+            first_img = p["img"][0] if p["img"] else og_image
+            if first_img and not first_img.startswith("http"):
+                first_img = f"{SITE_DOMAIN}/template/{first_img}"
+            
             prod_page_data = {
                 "header": make_header(tpl_header_product, {
                     "product_title": p["title"],
                     "product_keywords": p["keywords"],
-                    "product_description": p["desc"]
+                    "product_description": p["desc"],
+                    "og_image": first_img
                 }),
                 "footer": footer_rendered,
                 "product_title": p["title"],
