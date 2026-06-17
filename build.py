@@ -173,10 +173,14 @@ def gen_product_card(p, cat_map):
     """生成单个商品卡片HTML（用于首页/分类页横滚 & 网格）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
     img_src = p['img'][0] if p['img'] else ""
+    img_src_2 = p['img'][1] if len(p['img']) > 1 else ""
     amazon_url = f"https://www.amazon.com/dp/{p['asin']}/" if p['asin'] else p['link']
+    # 第二张图片元素（有图才生成）
+    img2_html = f'<img src="{img_src_2}" alt="{p["title"]}" class="product-img-hover">' if img_src_2 else ''
     return f"""<div class="product-card">
     <a href="/{cat_slug}/{p['slug']}/">
         <img src="{img_src}" alt="{p['title']}" class="product-img">
+        {img2_html}
     </a>
     <div class="product-info">
         <h3 class="product-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
@@ -190,10 +194,13 @@ def gen_related_card(p, cat_map):
     """生成相关商品卡片HTML（用于商品详情页底部）"""
     cat_slug = cat_map.get(p["cat"], {}).get("slug", "")
     img_src = p['img'][0] if p['img'] else ""
+    img_src_2 = p['img'][1] if len(p['img']) > 1 else ""
     amazon_url = f"https://www.amazon.com/dp/{p['asin']}/" if p['asin'] else p['link']
+    img2_html = f'<img src="{img_src_2}" alt="{p["title"]}" class="related-img-hover">' if img_src_2 else ''
     return f"""<div class="related-card">
     <a href="/{cat_slug}/{p['slug']}/">
         <img src="{img_src}" alt="{p['title']}" class="related-img">
+        {img2_html}
     </a>
     <div class="related-info">
         <h3 class="related-name"><a href="/{cat_slug}/{p['slug']}/">{p['title']}</a></h3>
