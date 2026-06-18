@@ -218,7 +218,10 @@ def gen_slider_html(carousel_data, token):
     dots_html = ""
     for idx, item in enumerate(carousel_data):
         fd = item["fields"]
+        # 优先使用上传的「轮播图片」附件，为空则使用「图片url」
         img = download_media(token, fd.get("轮播图片"))
+        if not img:
+            img = s(fd.get("图片url"))
         link = s(fd.get("图片链接"), "#")
         alt_text = s(fd.get("图片文本alt"), f"Banner {idx+1}")
         active = "active" if idx == 0 else ""
