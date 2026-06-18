@@ -148,7 +148,7 @@ function shareTo(platform) {
       }
       break;
     case 'email':
-      window.location.href = `mailto:?subject=查看这个产品&body=${url}`;
+      window.location.href = `mailto:?subject=Check out this product&body=${url}`;
       break;
     case 'whatsapp':
       window.open(`https://wa.me/?text=${url}`, '_blank');
